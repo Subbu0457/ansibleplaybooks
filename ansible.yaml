@@ -1,0 +1,19 @@
+- hosts: all
+  becoe: yes
+  tasks:
+  - name : installing tomcat9 to nodes
+    apt:
+     name: tomcat9
+  - name: installing nginx to nodes
+    apt:
+     name: nginx
+  - name: installing net-tools to nodes
+    apt:
+     name: installing tree to nodes
+  - name: installing openjdk-17-jdk to nodes
+    apt:
+     name: openjdk-17-jdk
+  - name: installing git to nodes
+    apt:
+     name: git
+     state: present
