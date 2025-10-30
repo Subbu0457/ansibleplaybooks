@@ -20,6 +20,8 @@ ansible-playbbok <filename> --syntax-check --> iy will not excyte the file and d
  
 
 
+/etc/ansible/hosts   --> here we will kept the hosts or node information like usernameofec2@private ip address ( why we will kept only private ip why not public menas
+                         private ip address will not change when we stop or start the instance public ip address will change when we start or stop the instance.
 
 
 - hosts: all
