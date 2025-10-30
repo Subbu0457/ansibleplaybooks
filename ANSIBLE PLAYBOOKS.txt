@@ -1,0 +1,226 @@
+we will start our playbooks with hosts ex:- (   -hosts : all     )
+if we give all in hosts means the playbook will deploy to the all nodes present in the hosts file 
+
+and we will run the playbook with root privilages ex: (     becomes:yes   ) if we give like that
+we telling that we have given root privilages to that playbbok 
+if we want install anythiong by the help of palybooks to servers it will ask permsiions as like we will dp manual 
+like we will give sudo before downloading something here we cant not give sudo every time  that's why
+we can give become:yes here 
+in tasks we will give what software we want deploy on the nodes and what configuratio we want deploy on the 
+nodes we will give iun the tasks  we can divide the each task withe the names ex( - names:  )
+update_cache: yes --> it means in background it will update the apt if the apt is old version
+we have given state: present it means if we given present in state we are saying that we are installing the
+packages and if we given satte: absent we are saying that we are uninstalling the given softwares or packages 
+but in apt module defaultly the state will take as present
+
+ansible-playbbok <palybook name> --> it is used to execute the playbook name and it will deploy to the given nodes
+ansible -m ping all --> it will check that all given nodes is working properluy or not 
+ansible-playbbok <filename> --syntax-check --> iy will not excyte the file and do not deploy to nodes it will check the only syntax of file 
+
+ 
+
+
+
+
+- hosts: all
+  become: yes
+  tasks:
+  - name: installing nginx
+    apt:
+	 update_cache: yes
+	 name: nginx
+	 state: present 
+	 
+	 
+	 
+	 
+- hosts: all
+  become: yes
+  tasks:
+  - name: installing nginx to nodes
+    apt:
+	 update_cache: yes
+	 name: nginx
+  - name: installing tomcat9 to nodes
+    apt:
+	 update_cached: yes
+	 name: tomcat9
+  - name: installing net-tools to nodes
+    apt:
+	 update_cache: yes
+	 name: net-tools
+  - name: installing tree to nodes
+    apt:
+	 update_cache: yes
+	 name: tree
+  - name: installing open jdk 17 to nodes
+    apt:
+	 update_cache: yes
+	 name: openjdk-17-jdk
+
+
+
+looping :  
+
+
+
+- hosts: all
+  become: yes
+  tasks:
+    - name: installing softwares
+      apt: 
+	    update_cache: yes
+	    name: "{{ item }}"
+	    state: present
+	  loop
+	    - tree
+	    - net-tools
+	    - tomcat9
+	    - openjdk-17-jdk
+	 
+	 	 
+- hosts: all
+  become: yes
+  tasks:
+    - name: installing softwares
+      apt:
+        update_cache: yes
+        name: "{{ item }}" 
+        state: present
+      loop: 
+        - tree
+        - net-tools
+        - tomcat9
+        - openjdk-17-jdk
+		
+		
+		
+		
+		
+		
+with loops (new version of ansible ) or with_items (old version of ansibile )
+
+Repeated tasks can be written as standard loops over a simple list of strings you can define the list direxctly in the task.
+
+   
+  
+- hosts: all
+  become: yes
+  tasks:
+  - name: installing softwares
+    apt:
+	 update_cache: yes
+	 name: "{{ item }}"
+	 state: present
+	loop: 
+	  - unzip
+	  - net-tools
+	  - tree
+	  
+	  
+	  
+	  
+by using ansible file module we can create files by writing playbooks :
+
+
+- hosts: all
+  become: yes
+  tasks: 
+  - name: Change file ownership, group and permissions
+  ansible.builtin.file:
+    path: /etc/foo.conf
+    owner: foo                --> changing the owner name of the file 
+    group: foo                --> changing the group of the file to foo
+    mode: '0644'              --> chaning the pwrmissions of the file starting 0 is mandatoery but no use 
+	
+	
+	
+	
+	
+	
+	
+	
+TAGS:  
+
+we can write multiple tasks in ansible if suppose we are having tasks called 
+
+We use tags in Ansible to selectively run or skip specific tasks within a large playbook. They give you fine-grained 
+control over which parts of the configuration process are executed during a playbook run.
+
+task1 & task2 ( these 2 already deployed in the node and i am writing 2 more tasks called task3 & task4  and i dont want to deploy task1 & task2 
+and i want to deploy only task3 & task4 by using tags and by tags we can deploy the specific task to the respective host  if we tag to any task 
+that task will skip and remaining tasks will dploy to the host 
+
+ansinle-playbook <playbbookname> --skip-tags "tag1,tag2" --> if we give like this tag1 tag2 are assaigned which tasks those tasks will skip and
+                                                             remaining tasks will deploy to the host
+ansible-playbook <playbookname> --tag "tag1,tag2"  --> if we give like this this tag1 tag2 only will deploy ti the host remaining all will skip 
+															 
+   
+   
+   
+   
+   tags are equal to the apt moduel 
+
+- hosts: all
+  become: yes
+  tasks:
+  - name: installing tree software 
+    apt: 
+	 update_cache: yes
+	 name: tree
+	tags: tree
+  - name: installing unzip software
+    apt: 
+	 update_cache: yes
+	 name: unzip
+	tags: unzip
+  - name: installing net-tools
+    apt:
+	 update_cache: yes
+	 name: net-tools
+	tags: net-tools
+	
+	
+	
+	
+	
+	
+variables
+variable precedence
+
+what is variable?
+
+suppose if i written code and i and i have word called tree-1.0 if updated it to tree_2.0 i want to change the word in
+all places from tree_1.0 --> tree_2.0
+if i givein variable  X = tree_1.0 in starting it self whenever i want to updatre ity from 1.0 to 2.0 i can update it easily
+by updating the variable
+
+
+
+
+
+
+
+
+
+
+
+command line :  ansibile-playbook <filename.yaml> --extra-vars="package_name=unzip"  --> if i run like and i have given unzip 
+in packaga_name in command but i haven given tree in playbook it will take unzip why means command line has 
+highest priority 
+or 
+ansible-playbook <filename.yaml> --e "package_name=unzip"
+
+note: command line variables has highest precedense (precedence=importance)
+
+- hosts: all
+  become: yes 
+  vars:
+    package_name: tree     --> here package_name is variable name in place of package_name we can give what ever we want
+  tasks:
+  - name: installing tree software 
+    apt: 
+	 update_cache: yes
+	 name: "{{ package_name }}"     --> here we are calling variable name 
+	tags: tree
+	state: present
