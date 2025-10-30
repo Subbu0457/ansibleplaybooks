@@ -1,0 +1,45 @@
+EXAMPLE: 
+Classes:
+	class VI:
+		Student:
+		age:
+		gender:
+			- male
+			- female
+			- others
+		percentage:
+		Grade:
+			- A
+			- B
+	class VII:
+		Student:
+		age:
+		gender:
+			- male
+			- female
+			- others
+		percentage:
+		Grade:
+			- A
+			- B
+	class VIII:
+		Student:
+		age:
+		gender:
+			- male
+			- female
+			- others
+		percentage:
+		Grade:
+			- A
+			- B
+		
+		
+		
+		
+		
+		
+here we should equal space of sub categories 
+here class VI is under Classes that's why i hav writtened it under classes
+And students,age,gender,percentage is under ClassVI that's why i have written those under classVI
+		
